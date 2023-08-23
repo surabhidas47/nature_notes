@@ -6,19 +6,7 @@
     <!--
         Added the constraints for entity Entry.
     -->
-    <changeSet id="20230823153441-2" author="jhipster">
-
-        <addForeignKeyConstraint baseColumnNames="entry_id"
-                                 baseTableName="rel_entry__tag"
-                                 constraintName="fk_rel_entry__tag__entry_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="entry"/>
-
-        <addForeignKeyConstraint baseColumnNames="tag_id"
-                                 baseTableName="rel_entry__tag"
-                                 constraintName="fk_rel_entry__tag__tag_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="tag"/>
+    <changeSet id="20230823214640-2" author="jhipster">
 
         <addForeignKeyConstraint baseColumnNames="location_id"
                                  baseTableName="entry"

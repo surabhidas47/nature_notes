@@ -52,8 +52,7 @@ export const Entry = () => {
                 <th>Trip Length</th>
                 <th>Trip Description</th>
                 <th>Trip Photo</th>
-                <th>Trip Type</th>
-                <th>Tag</th>
+                <th>Adventure</th>
                 <th>Location</th>
                 <th />
               </tr>
@@ -85,17 +84,7 @@ export const Entry = () => {
                       </div>
                     ) : null}
                   </td>
-                  <td>{entry.tripType}</td>
-                  <td>
-                    {entry.tags
-                      ? entry.tags.map((val, j) => (
-                          <span key={j}>
-                            <Link to={`/tag/${val.id}`}>{val.id}</Link>
-                            {j === entry.tags.length - 1 ? '' : ', '}
-                          </span>
-                        ))
-                      : null}
-                  </td>
+                  <td>{entry.adventure}</td>
                   <td>{entry.location ? <Link to={`/location/${entry.location.id}`}>{entry.location.id}</Link> : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">

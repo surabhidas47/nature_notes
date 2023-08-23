@@ -1,5 +1,5 @@
-import { ITag } from 'app/shared/model/tag.model';
 import { ILocation } from 'app/shared/model/location.model';
+import { Adventure } from 'app/shared/model/enumerations/adventure.model';
 
 export interface IEntry {
   id?: number;
@@ -9,8 +9,7 @@ export interface IEntry {
   tripDescription?: string | null;
   tripPhotoContentType?: string | null;
   tripPhoto?: string | null;
-  tripType?: string | null;
-  tags?: ITag[] | null;
+  adventure?: Adventure | null;
   location?: ILocation | null;
 }
 

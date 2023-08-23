@@ -44,7 +44,7 @@ public class Location implements Serializable {
 
     @OneToMany(mappedBy = "location")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "tags", "location" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "location" }, allowSetters = true)
     private Set<Entry> tripLocations = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

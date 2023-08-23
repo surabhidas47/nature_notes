@@ -1,6 +1,6 @@
 {
   "applications": "*",
-  "changelogDate": "20230823153441",
+  "changelogDate": "20230823214640",
   "dto": "no",
   "embedded": false,
   "entityTableName": "entry",
@@ -28,8 +28,9 @@
       "fieldTypeBlobContent": "image"
     },
     {
-      "fieldName": "tripType",
-      "fieldType": "String"
+      "fieldName": "adventure",
+      "fieldType": "Adventure",
+      "fieldValues": "CAMPING,HIKING"
     }
   ],
   "fluentMethods": true,
@@ -38,13 +39,6 @@
   "pagination": "no",
   "readOnly": false,
   "relationships": [
-    {
-      "otherEntityName": "tag",
-      "otherEntityRelationshipName": "entry",
-      "ownerSide": true,
-      "relationshipName": "tag",
-      "relationshipType": "many-to-many"
-    },
     {
       "otherEntityName": "location",
       "otherEntityRelationshipName": "tripLocation",

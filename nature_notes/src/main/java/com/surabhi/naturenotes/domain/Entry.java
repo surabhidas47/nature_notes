@@ -1,9 +1,8 @@
 package com.surabhi.naturenotes.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.surabhi.naturenotes.domain.enumeration.Adventure;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -44,14 +43,9 @@ public class Entry implements Serializable {
     @Column(name = "trip_photo_content_type")
     private String tripPhotoContentType;
 
-    @Column(name = "trip_type")
-    private String tripType;
-
-    @ManyToMany
-    @JoinTable(name = "rel_entry__tag", joinColumns = @JoinColumn(name = "entry_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "entries" }, allowSetters = true)
-    private Set<Tag> tags = new HashSet<>();
+    @Enumerated(EnumType.STRING)
+    @Column(name = "adventure")
+    private Adventure adventure;
 
     @ManyToOne
     @JsonIgnoreProperties(value = { "tripLocations" }, allowSetters = true)
@@ -150,42 +144,17 @@ public class Entry implements Serializable {
         this.tripPhotoContentType = tripPhotoContentType;
     }
 
-    public String getTripType() {
-        return this.tripType;
+    public Adventure getAdventure() {
+        return this.adventure;
     }
 
-    public Entry tripType(String tripType) {
-        this.setTripType(tripType);
+    public Entry adventure(Adventure adventure) {
+        this.setAdventure(adventure);
         return this;
     }
 
-    public void setTripType(String tripType) {
-        this.tripType = tripType;
-    }
-
-    public Set<Tag> getTags() {
-        return this.tags;
-    }
-
-    public void setTags(Set<Tag> tags) {
-        this.tags = tags;
-    }
-
-    public Entry tags(Set<Tag> tags) {
-        this.setTags(tags);
-        return this;
-    }
-
-    public Entry addTag(Tag tag) {
-        this.tags.add(tag);
-        tag.getEntries().add(this);
-        return this;
-    }
-
-    public Entry removeTag(Tag tag) {
-        this.tags.remove(tag);
-        tag.getEntries().remove(this);
-        return this;
+    public void setAdventure(Adventure adventure) {
+        this.adventure = adventure;
     }
 
     public Location getLocation() {
@@ -231,7 +200,7 @@ public class Entry implements Serializable {
             ", tripDescription='" + getTripDescription() + "'" +
             ", tripPhoto='" + getTripPhoto() + "'" +
             ", tripPhotoContentType='" + getTripPhotoContentType() + "'" +
-            ", tripType='" + getTripType() + "'" +
+            ", adventure='" + getAdventure() + "'" +
             "}";
     }
 }

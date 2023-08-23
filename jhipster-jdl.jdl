@@ -9,16 +9,13 @@ entity Entry {
     tripLength Integer,
     tripDescription TextBlob,
     tripPhoto ImageBlob,
-    tripType String
+    adventure Adventure
+    
 }
 
-entity Tag {
-	camping String,
-    hike String,
-    roadTrip String,
-    international String,
-    soloTravel String
-    	
+enum Adventure {
+CAMPING, HIKING
+
 }
 
 
@@ -38,9 +35,6 @@ relationship OneToMany {
 }
 
 
-relationship ManyToMany {
-	Entry to Tag
-}
 
 
 

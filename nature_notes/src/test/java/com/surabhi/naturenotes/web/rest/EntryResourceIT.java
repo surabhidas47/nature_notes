@@ -2,28 +2,21 @@ package com.surabhi.naturenotes.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.surabhi.naturenotes.IntegrationTest;
 import com.surabhi.naturenotes.domain.Entry;
+import com.surabhi.naturenotes.domain.enumeration.Adventure;
 import com.surabhi.naturenotes.repository.EntryRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,7 +27,6 @@ import org.springframework.util.Base64Utils;
  * Integration tests for the {@link EntryResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class EntryResourceIT {
@@ -56,8 +48,8 @@ class EntryResourceIT {
     private static final String DEFAULT_TRIP_PHOTO_CONTENT_TYPE = "image/jpg";
     private static final String UPDATED_TRIP_PHOTO_CONTENT_TYPE = "image/png";
 
-    private static final String DEFAULT_TRIP_TYPE = "AAAAAAAAAA";
-    private static final String UPDATED_TRIP_TYPE = "BBBBBBBBBB";
+    private static final Adventure DEFAULT_ADVENTURE = Adventure.CAMPING;
+    private static final Adventure UPDATED_ADVENTURE = Adventure.HIKING;
 
     private static final String ENTITY_API_URL = "/api/entries";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -67,9 +59,6 @@ class EntryResourceIT {
 
     @Autowired
     private EntryRepository entryRepository;
-
-    @Mock
-    private EntryRepository entryRepositoryMock;
 
     @Autowired
     private EntityManager em;
@@ -93,7 +82,7 @@ class EntryResourceIT {
             .tripDescription(DEFAULT_TRIP_DESCRIPTION)
             .tripPhoto(DEFAULT_TRIP_PHOTO)
             .tripPhotoContentType(DEFAULT_TRIP_PHOTO_CONTENT_TYPE)
-            .tripType(DEFAULT_TRIP_TYPE);
+            .adventure(DEFAULT_ADVENTURE);
         return entry;
     }
 
@@ -111,7 +100,7 @@ class EntryResourceIT {
             .tripDescription(UPDATED_TRIP_DESCRIPTION)
             .tripPhoto(UPDATED_TRIP_PHOTO)
             .tripPhotoContentType(UPDATED_TRIP_PHOTO_CONTENT_TYPE)
-            .tripType(UPDATED_TRIP_TYPE);
+            .adventure(UPDATED_ADVENTURE);
         return entry;
     }
 
@@ -139,7 +128,7 @@ class EntryResourceIT {
         assertThat(testEntry.getTripDescription()).isEqualTo(DEFAULT_TRIP_DESCRIPTION);
         assertThat(testEntry.getTripPhoto()).isEqualTo(DEFAULT_TRIP_PHOTO);
         assertThat(testEntry.getTripPhotoContentType()).isEqualTo(DEFAULT_TRIP_PHOTO_CONTENT_TYPE);
-        assertThat(testEntry.getTripType()).isEqualTo(DEFAULT_TRIP_TYPE);
+        assertThat(testEntry.getAdventure()).isEqualTo(DEFAULT_ADVENTURE);
     }
 
     @Test
@@ -178,24 +167,7 @@ class EntryResourceIT {
             .andExpect(jsonPath("$.[*].tripDescription").value(hasItem(DEFAULT_TRIP_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].tripPhotoContentType").value(hasItem(DEFAULT_TRIP_PHOTO_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].tripPhoto").value(hasItem(Base64Utils.encodeToString(DEFAULT_TRIP_PHOTO))))
-            .andExpect(jsonPath("$.[*].tripType").value(hasItem(DEFAULT_TRIP_TYPE)));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllEntriesWithEagerRelationshipsIsEnabled() throws Exception {
-        when(entryRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restEntryMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(entryRepositoryMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllEntriesWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(entryRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restEntryMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(entryRepositoryMock, times(1)).findAll(any(Pageable.class));
+            .andExpect(jsonPath("$.[*].adventure").value(hasItem(DEFAULT_ADVENTURE.toString())));
     }
 
     @Test
@@ -216,7 +188,7 @@ class EntryResourceIT {
             .andExpect(jsonPath("$.tripDescription").value(DEFAULT_TRIP_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.tripPhotoContentType").value(DEFAULT_TRIP_PHOTO_CONTENT_TYPE))
             .andExpect(jsonPath("$.tripPhoto").value(Base64Utils.encodeToString(DEFAULT_TRIP_PHOTO)))
-            .andExpect(jsonPath("$.tripType").value(DEFAULT_TRIP_TYPE));
+            .andExpect(jsonPath("$.adventure").value(DEFAULT_ADVENTURE.toString()));
     }
 
     @Test
@@ -245,7 +217,7 @@ class EntryResourceIT {
             .tripDescription(UPDATED_TRIP_DESCRIPTION)
             .tripPhoto(UPDATED_TRIP_PHOTO)
             .tripPhotoContentType(UPDATED_TRIP_PHOTO_CONTENT_TYPE)
-            .tripType(UPDATED_TRIP_TYPE);
+            .adventure(UPDATED_ADVENTURE);
 
         restEntryMockMvc
             .perform(
@@ -265,7 +237,7 @@ class EntryResourceIT {
         assertThat(testEntry.getTripDescription()).isEqualTo(UPDATED_TRIP_DESCRIPTION);
         assertThat(testEntry.getTripPhoto()).isEqualTo(UPDATED_TRIP_PHOTO);
         assertThat(testEntry.getTripPhotoContentType()).isEqualTo(UPDATED_TRIP_PHOTO_CONTENT_TYPE);
-        assertThat(testEntry.getTripType()).isEqualTo(UPDATED_TRIP_TYPE);
+        assertThat(testEntry.getAdventure()).isEqualTo(UPDATED_ADVENTURE);
     }
 
     @Test
@@ -356,7 +328,7 @@ class EntryResourceIT {
         assertThat(testEntry.getTripDescription()).isEqualTo(UPDATED_TRIP_DESCRIPTION);
         assertThat(testEntry.getTripPhoto()).isEqualTo(DEFAULT_TRIP_PHOTO);
         assertThat(testEntry.getTripPhotoContentType()).isEqualTo(DEFAULT_TRIP_PHOTO_CONTENT_TYPE);
-        assertThat(testEntry.getTripType()).isEqualTo(DEFAULT_TRIP_TYPE);
+        assertThat(testEntry.getAdventure()).isEqualTo(DEFAULT_ADVENTURE);
     }
 
     @Test
@@ -378,7 +350,7 @@ class EntryResourceIT {
             .tripDescription(UPDATED_TRIP_DESCRIPTION)
             .tripPhoto(UPDATED_TRIP_PHOTO)
             .tripPhotoContentType(UPDATED_TRIP_PHOTO_CONTENT_TYPE)
-            .tripType(UPDATED_TRIP_TYPE);
+            .adventure(UPDATED_ADVENTURE);
 
         restEntryMockMvc
             .perform(
@@ -398,7 +370,7 @@ class EntryResourceIT {
         assertThat(testEntry.getTripDescription()).isEqualTo(UPDATED_TRIP_DESCRIPTION);
         assertThat(testEntry.getTripPhoto()).isEqualTo(UPDATED_TRIP_PHOTO);
         assertThat(testEntry.getTripPhotoContentType()).isEqualTo(UPDATED_TRIP_PHOTO_CONTENT_TYPE);
-        assertThat(testEntry.getTripType()).isEqualTo(UPDATED_TRIP_TYPE);
+        assertThat(testEntry.getAdventure()).isEqualTo(UPDATED_ADVENTURE);
     }
 
     @Test

@@ -8,11 +8,10 @@ import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateT
 import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { ITag } from 'app/shared/model/tag.model';
-import { getEntities as getTags } from 'app/entities/tag/tag.reducer';
 import { ILocation } from 'app/shared/model/location.model';
 import { getEntities as getLocations } from 'app/entities/location/location.reducer';
 import { IEntry } from 'app/shared/model/entry.model';
+import { Adventure } from 'app/shared/model/enumerations/adventure.model';
 import { getEntity, updateEntity, createEntity, reset } from './entry.reducer';
 
 export const EntryUpdate = () => {
@@ -23,12 +22,12 @@ export const EntryUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
-  const tags = useAppSelector(state => state.tag.entities);
   const locations = useAppSelector(state => state.location.entities);
   const entryEntity = useAppSelector(state => state.entry.entity);
   const loading = useAppSelector(state => state.entry.loading);
   const updating = useAppSelector(state => state.entry.updating);
   const updateSuccess = useAppSelector(state => state.entry.updateSuccess);
+  const adventureValues = Object.keys(Adventure);
 
   const handleClose = () => {
     navigate('/entry');
@@ -41,7 +40,6 @@ export const EntryUpdate = () => {
       dispatch(getEntity(id));
     }
 
-    dispatch(getTags({}));
     dispatch(getLocations({}));
   }, []);
 
@@ -55,7 +53,6 @@ export const EntryUpdate = () => {
     const entity = {
       ...entryEntity,
       ...values,
-      tags: mapIdList(values.tags),
       location: locations.find(it => it.id.toString() === values.location.toString()),
     };
 
@@ -70,8 +67,8 @@ export const EntryUpdate = () => {
     isNew
       ? {}
       : {
+          adventure: 'CAMPING',
           ...entryEntity,
-          tags: entryEntity?.tags?.map(e => e.id.toString()),
           location: entryEntity?.location?.id,
         };
 
@@ -102,16 +99,12 @@ export const EntryUpdate = () => {
                 type="textarea"
               />
               <ValidatedBlobField label="Trip Photo" id="entry-tripPhoto" name="tripPhoto" data-cy="tripPhoto" isImage accept="image/*" />
-              <ValidatedField label="Trip Type" id="entry-tripType" name="tripType" data-cy="tripType" type="text" />
-              <ValidatedField label="Tag" id="entry-tag" data-cy="tag" type="select" multiple name="tags">
-                <option value="" key="0" />
-                {tags
-                  ? tags.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
+              <ValidatedField label="Adventure" id="entry-adventure" name="adventure" data-cy="adventure" type="select">
+                {adventureValues.map(adventure => (
+                  <option value={adventure} key={adventure}>
+                    {adventure}
+                  </option>
+                ))}
               </ValidatedField>
               <ValidatedField id="entry-location" name="location" data-cy="location" label="Location" type="select">
                 <option value="" key="0" />

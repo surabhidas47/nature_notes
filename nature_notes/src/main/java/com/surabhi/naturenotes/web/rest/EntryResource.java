@@ -137,8 +137,8 @@ public class EntryResource {
                 if (entry.getTripPhotoContentType() != null) {
                     existingEntry.setTripPhotoContentType(entry.getTripPhotoContentType());
                 }
-                if (entry.getTripType() != null) {
-                    existingEntry.setTripType(entry.getTripType());
+                if (entry.getAdventure() != null) {
+                    existingEntry.setAdventure(entry.getAdventure());
                 }
 
                 return existingEntry;
@@ -154,17 +154,12 @@ public class EntryResource {
     /**
      * {@code GET  /entries} : get all the entries.
      *
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of entries in body.
      */
     @GetMapping("/entries")
-    public List<Entry> getAllEntries(@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
+    public List<Entry> getAllEntries() {
         log.debug("REST request to get all Entries");
-        if (eagerload) {
-            return entryRepository.findAllWithEagerRelationships();
-        } else {
-            return entryRepository.findAll();
-        }
+        return entryRepository.findAll();
     }
 
     /**
@@ -176,7 +171,7 @@ public class EntryResource {
     @GetMapping("/entries/{id}")
     public ResponseEntity<Entry> getEntry(@PathVariable Long id) {
         log.debug("REST request to get Entry : {}", id);
-        Optional<Entry> entry = entryRepository.findOneWithEagerRelationships(id);
+        Optional<Entry> entry = entryRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(entry);
     }
 

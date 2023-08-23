@@ -62,20 +62,9 @@ export const EntryDetail = () => {
             ) : null}
           </dd>
           <dt>
-            <span id="tripType">Trip Type</span>
+            <span id="adventure">Adventure</span>
           </dt>
-          <dd>{entryEntity.tripType}</dd>
-          <dt>Tag</dt>
-          <dd>
-            {entryEntity.tags
-              ? entryEntity.tags.map((val, i) => (
-                  <span key={val.id}>
-                    <a>{val.id}</a>
-                    {entryEntity.tags && i === entryEntity.tags.length - 1 ? '' : ', '}
-                  </span>
-                ))
-              : null}
-          </dd>
+          <dd>{entryEntity.adventure}</dd>
           <dt>Location</dt>
           <dd>{entryEntity.location ? entryEntity.location.id : ''}</dd>
         </dl>
