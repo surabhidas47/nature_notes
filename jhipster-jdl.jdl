@@ -1,0 +1,48 @@
+
+
+
+
+entity Entry {
+	
+	tripTitle String,
+	tripLocation String,
+    tripLength Integer,
+    tripDescription TextBlob,
+    tripPhoto ImageBlob,
+    tripType String
+}
+
+entity Tag {
+	camping String,
+    hike String,
+    roadTrip String,
+    international String,
+    soloTravel String
+    	
+}
+
+
+entity Location {
+
+    locationName String,
+	street String,
+	city String,
+    state String,
+    zipcode String,
+    latLong String
+}
+
+
+relationship OneToMany {
+	 Location{tripLocation} to Entry
+}
+
+
+relationship ManyToMany {
+	Entry to Tag
+}
+
+
+
+
+

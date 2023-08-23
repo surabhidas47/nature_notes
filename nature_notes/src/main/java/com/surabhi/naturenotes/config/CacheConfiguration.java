@@ -48,6 +48,12 @@ public class CacheConfiguration {
             createCache(cm, com.surabhi.naturenotes.domain.User.class.getName());
             createCache(cm, com.surabhi.naturenotes.domain.Authority.class.getName());
             createCache(cm, com.surabhi.naturenotes.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.surabhi.naturenotes.domain.Entry.class.getName());
+            createCache(cm, com.surabhi.naturenotes.domain.Entry.class.getName() + ".tags");
+            createCache(cm, com.surabhi.naturenotes.domain.Tag.class.getName());
+            createCache(cm, com.surabhi.naturenotes.domain.Tag.class.getName() + ".entries");
+            createCache(cm, com.surabhi.naturenotes.domain.Location.class.getName());
+            createCache(cm, com.surabhi.naturenotes.domain.Location.class.getName() + ".tripLocations");
             // jhipster-needle-ehcache-add-entry
         };
     }

@@ -1,0 +1,56 @@
+{
+  "applications": "*",
+  "changelogDate": "20230823153441",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "entry",
+  "fields": [
+    {
+      "fieldName": "tripTitle",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tripLocation",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tripLength",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "tripDescription",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "tripPhoto",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "image"
+    },
+    {
+      "fieldName": "tripType",
+      "fieldType": "String"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Entry",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "tag",
+      "otherEntityRelationshipName": "entry",
+      "ownerSide": true,
+      "relationshipName": "tag",
+      "relationshipType": "many-to-many"
+    },
+    {
+      "otherEntityName": "location",
+      "otherEntityRelationshipName": "tripLocation",
+      "relationshipName": "location",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "no"
+}
