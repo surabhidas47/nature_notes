@@ -1,7 +1,7 @@
 const API_URL = `http://localhost:8080`
 
 function fetchTicketsData() {
-    fetch(`${API_URL}/api/tickets`)
+    fetch(`${API_URL}/api/entries`)
         .then((res) => {
             //console.log("res is ", Object.prototype.toString.call(res));
             return res.json();
@@ -47,12 +47,12 @@ function parseTicketId() {
       }
 }
 // takes a UNIX integer date, and produces a prettier human string
-function dateOf(date) {
-    const milliseconds = date * 1000 // 1575909015000
-    const dateObject = new Date(milliseconds)
-    const humanDateFormat = dateObject.toLocaleString() //2019-12-9 10:30:15
-    return humanDateFormat
-}
+//function dateOf(date) {
+//    const milliseconds = date * 1000 // 1575909015000
+//    const dateObject = new Date(milliseconds)
+//    const humanDateFormat = dateObject.toLocaleString() //2019-12-9 10:30:15
+//    return humanDateFormat
+//}
 
 function showTicketList(data) {
     // the data parameter will be a JS array of JS objects
@@ -64,18 +64,25 @@ function showTicketList(data) {
 
     data.map(function(post) {
         console.log("Ticket:", post);
+        //our bullet points
         let li = document.createElement('li');
+        //big h1, h2, h3 refers to size
         let title = document.createElement('h3');
+        //paragraph
         let body = document.createElement('p');
-        let by = document.createElement('p');
-        title.innerHTML = `<a href="/ticketdetail.html?ticketid=${post.id}">${post.title}</a>`;
-        body.innerHTML = `${post.description}`;
-        //let postedTime = dateOf(post.time)
-        by.innerHTML = `${post.date} - ${post.reportedBy}`;
+
+        //a tag = link.. the link of the bullet.. the specific item we are clicking into
+        //? says a variable will come after
+        //${a way for js to know this is a refernce to a variable name}
+        title.innerHTML = `<a href="/ticketdetail.html?ticketid=${post.id}">${post.tripTitle}</a>`;
+        //post is a single JSON... .tittle is one the fields
+        //post.title = object.certainfield
+        body.innerHTML = `${post.tripDescription}`;
+
 
         li.appendChild(title);
         li.appendChild(body);
-        li.appendChild(by);
+
         list.appendChild(li);
     });
 
@@ -95,10 +102,10 @@ function showTicketDetail(post) {
     let title = document.createElement('h2');
     let body = document.createElement('p');
     let by = document.createElement('p');
-    title.innerHTML = `${post.title}`;
-    body.innerHTML = `${post.description}`;
+    title.innerHTML = `${post.tripTitle}`;
+    body.innerHTML = `${post.tripDescription}`;
     //let postedTime = dateOf(post.time)
-    by.innerHTML = `${post.date} - ${post.reportedBy}`;
+    //by.innerHTML = `${post.date} - ${post.reportedBy}`;
 
     li.appendChild(title);
     li.appendChild(body);
