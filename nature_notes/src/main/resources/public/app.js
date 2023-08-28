@@ -1,4 +1,6 @@
 const API_URL = `http://localhost:8080`
+//const API_URL = `http://127.0.0.1:8080/`
+
 
 function fetchTicketsData() {
     fetch(`${API_URL}/api/entries`)
@@ -17,8 +19,10 @@ function fetchTicketsData() {
 
 
 
-function fetchTicket(ticketid) {
-    fetch(`${API_URL}/api/tickets/${ticketid}`)
+function fetchTicket(id) {
+
+    fetch(`${API_URL}/api/entries/${id}`)
+    //fetch(`${API_URL}/api/tickets/${ticketid}`)
         .then((res) => {
             //console.log("res is ", Object.prototype.toString.call(res));
             return res.json();
@@ -28,7 +32,7 @@ function fetchTicket(ticketid) {
         })
         .catch((error) => {
             console.log(`Error Fetching data : ${error}`)
-            document.getElementById('posts').innerHTML = 'Error Loading Single Ticket Data'
+            document.getElementById('posts').innerHTML = 'Error Loading Entry Data'
         })
 }
 
@@ -63,13 +67,15 @@ function showTicketList(data) {
     const list = document.createDocumentFragment();
 
     data.map(function(post) {
-        console.log("Ticket:", post);
+        console.log("Entry:", post);
         //our bullet points
         let li = document.createElement('li');
         //big h1, h2, h3 refers to size
         let title = document.createElement('h3');
+
         //paragraph
         let body = document.createElement('p');
+        //let img = document.createElement('img');
 
         //a tag = link.. the link of the bullet.. the specific item we are clicking into
         //? says a variable will come after
@@ -79,9 +85,16 @@ function showTicketList(data) {
         //post.title = object.certainfield
         body.innerHTML = `${post.tripDescription}`;
 
+        //img.src = `data:image/png;base64,${post.tripPhoto}`;
+
+
 
         li.appendChild(title);
         li.appendChild(body);
+        //li.appendChild(img);
+
+
+
 
         list.appendChild(li);
     });
@@ -102,15 +115,26 @@ function showTicketDetail(post) {
     let title = document.createElement('h2');
     let body = document.createElement('p');
     let by = document.createElement('p');
+
+    let img = document.createElement('img');
     title.innerHTML = `${post.tripTitle}`;
     body.innerHTML = `${post.tripDescription}`;
+
+
+
+    img.src = `data:image/png;base64,${post.tripPhoto}`;
+
     //let postedTime = dateOf(post.time)
     //by.innerHTML = `${post.date} - ${post.reportedBy}`;
 
+
     li.appendChild(title);
     li.appendChild(body);
+    li.appendChild(img);
     li.appendChild(by);
     detail.appendChild(li);
+
+
 
     ul.appendChild(detail);
 }
