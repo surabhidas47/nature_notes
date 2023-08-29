@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
-import { openFile, byteSize } from 'react-jhipster';
+import { openFile, byteSize, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
@@ -33,9 +33,9 @@ export const EntryDetail = () => {
           </dt>
           <dd>{entryEntity.tripTitle}</dd>
           <dt>
-            <span id="tripLocation">Trip Location</span>
+            <span id="tripDate">Trip Date</span>
           </dt>
-          <dd>{entryEntity.tripLocation}</dd>
+          <dd>{entryEntity.tripDate ? <TextFormat value={entryEntity.tripDate} type="date" format={APP_LOCAL_DATE_FORMAT} /> : null}</dd>
           <dt>
             <span id="tripLength">Trip Length</span>
           </dt>
@@ -65,8 +65,12 @@ export const EntryDetail = () => {
             <span id="adventure">Adventure</span>
           </dt>
           <dd>{entryEntity.adventure}</dd>
+          <dt>
+            <span id="season">Season</span>
+          </dt>
+          <dd>{entryEntity.season}</dd>
           <dt>Location</dt>
-          <dd>{entryEntity.location ? entryEntity.location.id : ''}</dd>
+          <dd>{entryEntity.location ? entryEntity.location.locationName : ''}</dd>
         </dl>
         <Button tag={Link} to="/entry" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>

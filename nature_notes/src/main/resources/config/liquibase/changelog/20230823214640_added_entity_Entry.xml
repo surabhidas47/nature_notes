@@ -17,7 +17,7 @@
             <column name="trip_title" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="trip_location" type="varchar(255)">
+            <column name="trip_date" type="date">
                 <constraints nullable="true" />
             </column>
             <column name="trip_length" type="integer">
@@ -33,6 +33,9 @@
                 <constraints nullable="true" />
             </column>
             <column name="adventure" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="season" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="location_id" type="bigint">
@@ -60,12 +63,13 @@
                   usePreparedStatements="true">
             <column name="id" type="numeric"/>
             <column name="trip_title" type="string"/>
-            <column name="trip_location" type="string"/>
+            <column name="trip_date" type="date"/>
             <column name="trip_length" type="numeric"/>
             <column name="trip_description" type="clob"/>
             <column name="trip_photo" type="blob"/>
             <column name="trip_photo_content_type" type="string"/>
             <column name="adventure" type="string"/>
+            <column name="season" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

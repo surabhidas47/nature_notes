@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Table } from 'reactstrap';
-import { openFile, byteSize, Translate } from 'react-jhipster';
+import { openFile, byteSize, Translate, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
@@ -48,11 +48,12 @@ export const Entry = () => {
               <tr>
                 <th>ID</th>
                 <th>Trip Title</th>
-                <th>Trip Location</th>
+                <th>Trip Date</th>
                 <th>Trip Length</th>
                 <th>Trip Description</th>
                 <th>Trip Photo</th>
                 <th>Adventure</th>
+                <th>Season</th>
                 <th>Location</th>
                 <th />
               </tr>
@@ -66,7 +67,7 @@ export const Entry = () => {
                     </Button>
                   </td>
                   <td>{entry.tripTitle}</td>
-                  <td>{entry.tripLocation}</td>
+                  <td>{entry.tripDate ? <TextFormat type="date" value={entry.tripDate} format={APP_LOCAL_DATE_FORMAT} /> : null}</td>
                   <td>{entry.tripLength}</td>
                   <td>{entry.tripDescription}</td>
                   <td>
@@ -85,7 +86,8 @@ export const Entry = () => {
                     ) : null}
                   </td>
                   <td>{entry.adventure}</td>
-                  <td>{entry.location ? <Link to={`/location/${entry.location.id}`}>{entry.location.id}</Link> : ''}</td>
+                  <td>{entry.season}</td>
+                  <td>{entry.location ? <Link to={`/location/${entry.location.id}`}>{entry.location.locationName}</Link> : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`/entry/${entry.id}`} color="info" size="sm" data-cy="entityDetailsButton">

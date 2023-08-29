@@ -12,6 +12,7 @@ import { ILocation } from 'app/shared/model/location.model';
 import { getEntities as getLocations } from 'app/entities/location/location.reducer';
 import { IEntry } from 'app/shared/model/entry.model';
 import { Adventure } from 'app/shared/model/enumerations/adventure.model';
+import { Season } from 'app/shared/model/enumerations/season.model';
 import { getEntity, updateEntity, createEntity, reset } from './entry.reducer';
 
 export const EntryUpdate = () => {
@@ -28,6 +29,7 @@ export const EntryUpdate = () => {
   const updating = useAppSelector(state => state.entry.updating);
   const updateSuccess = useAppSelector(state => state.entry.updateSuccess);
   const adventureValues = Object.keys(Adventure);
+  const seasonValues = Object.keys(Season);
 
   const handleClose = () => {
     navigate('/entry');
@@ -68,6 +70,7 @@ export const EntryUpdate = () => {
       ? {}
       : {
           adventure: 'CAMPING',
+          season: 'SUMMER',
           ...entryEntity,
           location: entryEntity?.location?.id,
         };
@@ -89,7 +92,7 @@ export const EntryUpdate = () => {
             <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
               {!isNew ? <ValidatedField name="id" required readOnly id="entry-id" label="ID" validate={{ required: true }} /> : null}
               <ValidatedField label="Trip Title" id="entry-tripTitle" name="tripTitle" data-cy="tripTitle" type="text" />
-              <ValidatedField label="Trip Location" id="entry-tripLocation" name="tripLocation" data-cy="tripLocation" type="text" />
+              <ValidatedField label="Trip Date" id="entry-tripDate" name="tripDate" data-cy="tripDate" type="date" />
               <ValidatedField label="Trip Length" id="entry-tripLength" name="tripLength" data-cy="tripLength" type="text" />
               <ValidatedField
                 label="Trip Description"
@@ -106,12 +109,19 @@ export const EntryUpdate = () => {
                   </option>
                 ))}
               </ValidatedField>
+              <ValidatedField label="Season" id="entry-season" name="season" data-cy="season" type="select">
+                {seasonValues.map(season => (
+                  <option value={season} key={season}>
+                    {season}
+                  </option>
+                ))}
+              </ValidatedField>
               <ValidatedField id="entry-location" name="location" data-cy="location" label="Location" type="select">
                 <option value="" key="0" />
                 {locations
                   ? locations.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.locationName}
                       </option>
                     ))
                   : null}

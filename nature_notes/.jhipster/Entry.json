@@ -10,8 +10,8 @@
       "fieldType": "String"
     },
     {
-      "fieldName": "tripLocation",
-      "fieldType": "String"
+      "fieldName": "tripDate",
+      "fieldType": "LocalDate"
     },
     {
       "fieldName": "tripLength",
@@ -31,6 +31,11 @@
       "fieldName": "adventure",
       "fieldType": "Adventure",
       "fieldValues": "CAMPING,HIKING"
+    },
+    {
+      "fieldName": "season",
+      "fieldType": "Season",
+      "fieldValues": "SUMMER,FALL,SPRING,WINTER"
     }
   ],
   "fluentMethods": true,
@@ -40,8 +45,8 @@
   "readOnly": false,
   "relationships": [
     {
+      "otherEntityField": "locationName",
       "otherEntityName": "location",
-      "otherEntityRelationshipName": "tripLocation",
       "relationshipName": "location",
       "relationshipType": "many-to-one"
     }

@@ -2,13 +2,17 @@ const API_URL = `http://localhost:8080`
 //const API_URL = `http://127.0.0.1:8080/`
 
 
+
 function fetchTicketsData() {
+//1.making a GET request
     fetch(`${API_URL}/api/entries`)
         .then((res) => {
             //console.log("res is ", Object.prototype.toString.call(res));
+           //2.returning the request in JSON
             return res.json();
         })
         .then((data) => {
+        //3.calling this function to display the list
             showTicketList(data)
         })
         .catch((error) => {
@@ -18,16 +22,17 @@ function fetchTicketsData() {
 }
 
 
-
+//1.getting specific entry, if succesfull calls 2.
 function fetchTicket(id) {
 
     fetch(`${API_URL}/api/entries/${id}`)
-    //fetch(`${API_URL}/api/tickets/${ticketid}`)
+
         .then((res) => {
             //console.log("res is ", Object.prototype.toString.call(res));
             return res.json();
         })
         .then((data) => {
+        //2.shows the specfic entry
             showTicketDetail(data)
         })
         .catch((error) => {
@@ -36,6 +41,7 @@ function fetchTicket(id) {
         })
 }
 
+//
 function parseTicketId() {
     try {
         var url_string = (window.location.href).toLowerCase();
@@ -58,45 +64,46 @@ function parseTicketId() {
 //    return humanDateFormat
 //}
 
+//1.taking array of ticket entry data as input and generating html elements
 function showTicketList(data) {
     // the data parameter will be a JS array of JS objects
     // this uses a combination of "HTML building" DOM methods (the document createElements) and
     // simple string interpolation (see the 'a' tag on title)
     // both are valid ways of building the html.
+
+    //2.so in entries.html we are getting <div id='posts'></div> with this doc.getElement
     const ul = document.getElementById('posts');
+
+    //3. basically when we create a document fragment we are about to creates nodes
     const list = document.createDocumentFragment();
+
+    //4.map an input to different output.. post is one json object, we are mapping it ..
+    //for each json object we are create list, titlt.... and then doing it for the next one
 
     data.map(function(post) {
         console.log("Entry:", post);
-        //our bullet points
+
+        //5. i am creating nodes! (part of the dom tree)
         let li = document.createElement('li');
-        //big h1, h2, h3 refers to size
         let title = document.createElement('h3');
 
-        //paragraph
         let body = document.createElement('p');
         //let img = document.createElement('img');
 
-        //a tag = link.. the link of the bullet.. the specific item we are clicking into
-        //? says a variable will come after
-        //${a way for js to know this is a refernce to a variable name}
+
         title.innerHTML = `<a href="/ticketdetail.html?ticketid=${post.id}">${post.tripTitle}</a>`;
-        //post is a single JSON... .tittle is one the fields
-        //post.title = object.certainfield
+
         body.innerHTML = `${post.tripDescription}`;
 
         //img.src = `data:image/png;base64,${post.tripPhoto}`;
-
-
 
         li.appendChild(title);
         li.appendChild(body);
         //li.appendChild(img);
 
 
-
-
         list.appendChild(li);
+
     });
 
     ul.appendChild(list);

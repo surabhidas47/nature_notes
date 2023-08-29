@@ -122,8 +122,8 @@ public class EntryResource {
                 if (entry.getTripTitle() != null) {
                     existingEntry.setTripTitle(entry.getTripTitle());
                 }
-                if (entry.getTripLocation() != null) {
-                    existingEntry.setTripLocation(entry.getTripLocation());
+                if (entry.getTripDate() != null) {
+                    existingEntry.setTripDate(entry.getTripDate());
                 }
                 if (entry.getTripLength() != null) {
                     existingEntry.setTripLength(entry.getTripLength());
@@ -140,6 +140,9 @@ public class EntryResource {
                 if (entry.getAdventure() != null) {
                     existingEntry.setAdventure(entry.getAdventure());
                 }
+                if (entry.getSeason() != null) {
+                    existingEntry.setSeason(entry.getSeason());
+                }
 
                 return existingEntry;
             })
@@ -154,12 +157,17 @@ public class EntryResource {
     /**
      * {@code GET  /entries} : get all the entries.
      *
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of entries in body.
      */
     @GetMapping("/entries")
-    public List<Entry> getAllEntries() {
+    public List<Entry> getAllEntries(@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
         log.debug("REST request to get all Entries");
-        return entryRepository.findAll();
+        if (eagerload) {
+            return entryRepository.findAllWithEagerRelationships();
+        } else {
+            return entryRepository.findAll();
+        }
     }
 
     /**
@@ -171,7 +179,7 @@ public class EntryResource {
     @GetMapping("/entries/{id}")
     public ResponseEntity<Entry> getEntry(@PathVariable Long id) {
         log.debug("REST request to get Entry : {}", id);
-        Optional<Entry> entry = entryRepository.findById(id);
+        Optional<Entry> entry = entryRepository.findOneWithEagerRelationships(id);
         return ResponseUtil.wrapOrNotFound(entry);
     }
 

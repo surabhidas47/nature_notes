@@ -35,13 +35,6 @@
   "name": "Location",
   "pagination": "no",
   "readOnly": false,
-  "relationships": [
-    {
-      "otherEntityName": "entry",
-      "otherEntityRelationshipName": "location",
-      "relationshipName": "tripLocation",
-      "relationshipType": "one-to-many"
-    }
-  ],
+  "relationships": [],
   "service": "no"
 }

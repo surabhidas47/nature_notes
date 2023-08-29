@@ -1,9 +1,6 @@
 package com.surabhi.naturenotes.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -41,11 +38,6 @@ public class Location implements Serializable {
 
     @Column(name = "lat_long")
     private String latLong;
-
-    @OneToMany(mappedBy = "location")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "location" }, allowSetters = true)
-    private Set<Entry> tripLocations = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -138,37 +130,6 @@ public class Location implements Serializable {
 
     public void setLatLong(String latLong) {
         this.latLong = latLong;
-    }
-
-    public Set<Entry> getTripLocations() {
-        return this.tripLocations;
-    }
-
-    public void setTripLocations(Set<Entry> entries) {
-        if (this.tripLocations != null) {
-            this.tripLocations.forEach(i -> i.setLocation(null));
-        }
-        if (entries != null) {
-            entries.forEach(i -> i.setLocation(this));
-        }
-        this.tripLocations = entries;
-    }
-
-    public Location tripLocations(Set<Entry> entries) {
-        this.setTripLocations(entries);
-        return this;
-    }
-
-    public Location addTripLocation(Entry entry) {
-        this.tripLocations.add(entry);
-        entry.setLocation(this);
-        return this;
-    }
-
-    public Location removeTripLocation(Entry entry) {
-        this.tripLocations.remove(entry);
-        entry.setLocation(null);
-        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

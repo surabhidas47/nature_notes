@@ -1,8 +1,9 @@
 package com.surabhi.naturenotes.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.surabhi.naturenotes.domain.enumeration.Adventure;
+import com.surabhi.naturenotes.domain.enumeration.Season;
 import java.io.Serializable;
+import java.time.LocalDate;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -26,8 +27,8 @@ public class Entry implements Serializable {
     @Column(name = "trip_title")
     private String tripTitle;
 
-    @Column(name = "trip_location")
-    private String tripLocation;
+    @Column(name = "trip_date")
+    private LocalDate tripDate;
 
     @Column(name = "trip_length")
     private Integer tripLength;
@@ -47,8 +48,11 @@ public class Entry implements Serializable {
     @Column(name = "adventure")
     private Adventure adventure;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "season")
+    private Season season;
+
     @ManyToOne
-    @JsonIgnoreProperties(value = { "tripLocations" }, allowSetters = true)
     private Location location;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -79,17 +83,17 @@ public class Entry implements Serializable {
         this.tripTitle = tripTitle;
     }
 
-    public String getTripLocation() {
-        return this.tripLocation;
+    public LocalDate getTripDate() {
+        return this.tripDate;
     }
 
-    public Entry tripLocation(String tripLocation) {
-        this.setTripLocation(tripLocation);
+    public Entry tripDate(LocalDate tripDate) {
+        this.setTripDate(tripDate);
         return this;
     }
 
-    public void setTripLocation(String tripLocation) {
-        this.tripLocation = tripLocation;
+    public void setTripDate(LocalDate tripDate) {
+        this.tripDate = tripDate;
     }
 
     public Integer getTripLength() {
@@ -157,6 +161,19 @@ public class Entry implements Serializable {
         this.adventure = adventure;
     }
 
+    public Season getSeason() {
+        return this.season;
+    }
+
+    public Entry season(Season season) {
+        this.setSeason(season);
+        return this;
+    }
+
+    public void setSeason(Season season) {
+        this.season = season;
+    }
+
     public Location getLocation() {
         return this.location;
     }
@@ -195,12 +212,13 @@ public class Entry implements Serializable {
         return "Entry{" +
             "id=" + getId() +
             ", tripTitle='" + getTripTitle() + "'" +
-            ", tripLocation='" + getTripLocation() + "'" +
+            ", tripDate='" + getTripDate() + "'" +
             ", tripLength=" + getTripLength() +
             ", tripDescription='" + getTripDescription() + "'" +
             ", tripPhoto='" + getTripPhoto() + "'" +
             ", tripPhotoContentType='" + getTripPhotoContentType() + "'" +
             ", adventure='" + getAdventure() + "'" +
+            ", season='" + getSeason() + "'" +
             "}";
     }
 }

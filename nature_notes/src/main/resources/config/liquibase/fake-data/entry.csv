@@ -1,1 +1,1 @@
-id;trip_title;trip_location;trip_length;trip_description;trip_photo;trip_photo_content_type;adventure
+id;trip_title;trip_date;trip_length;trip_description;trip_photo;trip_photo_content_type;adventure;season

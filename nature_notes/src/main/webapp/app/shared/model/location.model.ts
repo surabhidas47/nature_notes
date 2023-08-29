@@ -1,5 +1,3 @@
-import { IEntry } from 'app/shared/model/entry.model';
-
 export interface ILocation {
   id?: number;
   locationName?: string | null;
@@ -8,7 +6,6 @@ export interface ILocation {
   state?: string | null;
   zipcode?: string | null;
   latLong?: string | null;
-  tripLocations?: IEntry[] | null;
 }
 
 export const defaultValue: Readonly<ILocation> = {};

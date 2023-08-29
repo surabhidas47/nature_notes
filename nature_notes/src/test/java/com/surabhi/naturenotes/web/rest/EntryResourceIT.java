@@ -2,21 +2,32 @@ package com.surabhi.naturenotes.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.surabhi.naturenotes.IntegrationTest;
 import com.surabhi.naturenotes.domain.Entry;
 import com.surabhi.naturenotes.domain.enumeration.Adventure;
+import com.surabhi.naturenotes.domain.enumeration.Season;
 import com.surabhi.naturenotes.repository.EntryRepository;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,6 +38,7 @@ import org.springframework.util.Base64Utils;
  * Integration tests for the {@link EntryResource} REST controller.
  */
 @IntegrationTest
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class EntryResourceIT {
@@ -34,8 +46,8 @@ class EntryResourceIT {
     private static final String DEFAULT_TRIP_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_TRIP_TITLE = "BBBBBBBBBB";
 
-    private static final String DEFAULT_TRIP_LOCATION = "AAAAAAAAAA";
-    private static final String UPDATED_TRIP_LOCATION = "BBBBBBBBBB";
+    private static final LocalDate DEFAULT_TRIP_DATE = LocalDate.ofEpochDay(0L);
+    private static final LocalDate UPDATED_TRIP_DATE = LocalDate.now(ZoneId.systemDefault());
 
     private static final Integer DEFAULT_TRIP_LENGTH = 1;
     private static final Integer UPDATED_TRIP_LENGTH = 2;
@@ -51,6 +63,9 @@ class EntryResourceIT {
     private static final Adventure DEFAULT_ADVENTURE = Adventure.CAMPING;
     private static final Adventure UPDATED_ADVENTURE = Adventure.HIKING;
 
+    private static final Season DEFAULT_SEASON = Season.SUMMER;
+    private static final Season UPDATED_SEASON = Season.FALL;
+
     private static final String ENTITY_API_URL = "/api/entries";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -59,6 +74,9 @@ class EntryResourceIT {
 
     @Autowired
     private EntryRepository entryRepository;
+
+    @Mock
+    private EntryRepository entryRepositoryMock;
 
     @Autowired
     private EntityManager em;
@@ -77,12 +95,13 @@ class EntryResourceIT {
     public static Entry createEntity(EntityManager em) {
         Entry entry = new Entry()
             .tripTitle(DEFAULT_TRIP_TITLE)
-            .tripLocation(DEFAULT_TRIP_LOCATION)
+            .tripDate(DEFAULT_TRIP_DATE)
             .tripLength(DEFAULT_TRIP_LENGTH)
             .tripDescription(DEFAULT_TRIP_DESCRIPTION)
             .tripPhoto(DEFAULT_TRIP_PHOTO)
             .tripPhotoContentType(DEFAULT_TRIP_PHOTO_CONTENT_TYPE)
-            .adventure(DEFAULT_ADVENTURE);
+            .adventure(DEFAULT_ADVENTURE)
+            .season(DEFAULT_SEASON);
         return entry;
     }
 
@@ -95,12 +114,13 @@ class EntryResourceIT {
     public static Entry createUpdatedEntity(EntityManager em) {
         Entry entry = new Entry()
             .tripTitle(UPDATED_TRIP_TITLE)
-            .tripLocation(UPDATED_TRIP_LOCATION)
+            .tripDate(UPDATED_TRIP_DATE)
             .tripLength(UPDATED_TRIP_LENGTH)
             .tripDescription(UPDATED_TRIP_DESCRIPTION)
             .tripPhoto(UPDATED_TRIP_PHOTO)
             .tripPhotoContentType(UPDATED_TRIP_PHOTO_CONTENT_TYPE)
-            .adventure(UPDATED_ADVENTURE);
+            .adventure(UPDATED_ADVENTURE)
+            .season(UPDATED_SEASON);
         return entry;
     }
 
@@ -123,12 +143,13 @@ class EntryResourceIT {
         assertThat(entryList).hasSize(databaseSizeBeforeCreate + 1);
         Entry testEntry = entryList.get(entryList.size() - 1);
         assertThat(testEntry.getTripTitle()).isEqualTo(DEFAULT_TRIP_TITLE);
-        assertThat(testEntry.getTripLocation()).isEqualTo(DEFAULT_TRIP_LOCATION);
+        assertThat(testEntry.getTripDate()).isEqualTo(DEFAULT_TRIP_DATE);
         assertThat(testEntry.getTripLength()).isEqualTo(DEFAULT_TRIP_LENGTH);
         assertThat(testEntry.getTripDescription()).isEqualTo(DEFAULT_TRIP_DESCRIPTION);
         assertThat(testEntry.getTripPhoto()).isEqualTo(DEFAULT_TRIP_PHOTO);
         assertThat(testEntry.getTripPhotoContentType()).isEqualTo(DEFAULT_TRIP_PHOTO_CONTENT_TYPE);
         assertThat(testEntry.getAdventure()).isEqualTo(DEFAULT_ADVENTURE);
+        assertThat(testEntry.getSeason()).isEqualTo(DEFAULT_SEASON);
     }
 
     @Test
@@ -162,12 +183,30 @@ class EntryResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(entry.getId().intValue())))
             .andExpect(jsonPath("$.[*].tripTitle").value(hasItem(DEFAULT_TRIP_TITLE)))
-            .andExpect(jsonPath("$.[*].tripLocation").value(hasItem(DEFAULT_TRIP_LOCATION)))
+            .andExpect(jsonPath("$.[*].tripDate").value(hasItem(DEFAULT_TRIP_DATE.toString())))
             .andExpect(jsonPath("$.[*].tripLength").value(hasItem(DEFAULT_TRIP_LENGTH)))
             .andExpect(jsonPath("$.[*].tripDescription").value(hasItem(DEFAULT_TRIP_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].tripPhotoContentType").value(hasItem(DEFAULT_TRIP_PHOTO_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].tripPhoto").value(hasItem(Base64Utils.encodeToString(DEFAULT_TRIP_PHOTO))))
-            .andExpect(jsonPath("$.[*].adventure").value(hasItem(DEFAULT_ADVENTURE.toString())));
+            .andExpect(jsonPath("$.[*].adventure").value(hasItem(DEFAULT_ADVENTURE.toString())))
+            .andExpect(jsonPath("$.[*].season").value(hasItem(DEFAULT_SEASON.toString())));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllEntriesWithEagerRelationshipsIsEnabled() throws Exception {
+        when(entryRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restEntryMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
+
+        verify(entryRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllEntriesWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(entryRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restEntryMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
+        verify(entryRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
@@ -183,12 +222,13 @@ class EntryResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(entry.getId().intValue()))
             .andExpect(jsonPath("$.tripTitle").value(DEFAULT_TRIP_TITLE))
-            .andExpect(jsonPath("$.tripLocation").value(DEFAULT_TRIP_LOCATION))
+            .andExpect(jsonPath("$.tripDate").value(DEFAULT_TRIP_DATE.toString()))
             .andExpect(jsonPath("$.tripLength").value(DEFAULT_TRIP_LENGTH))
             .andExpect(jsonPath("$.tripDescription").value(DEFAULT_TRIP_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.tripPhotoContentType").value(DEFAULT_TRIP_PHOTO_CONTENT_TYPE))
             .andExpect(jsonPath("$.tripPhoto").value(Base64Utils.encodeToString(DEFAULT_TRIP_PHOTO)))
-            .andExpect(jsonPath("$.adventure").value(DEFAULT_ADVENTURE.toString()));
+            .andExpect(jsonPath("$.adventure").value(DEFAULT_ADVENTURE.toString()))
+            .andExpect(jsonPath("$.season").value(DEFAULT_SEASON.toString()));
     }
 
     @Test
@@ -212,12 +252,13 @@ class EntryResourceIT {
         em.detach(updatedEntry);
         updatedEntry
             .tripTitle(UPDATED_TRIP_TITLE)
-            .tripLocation(UPDATED_TRIP_LOCATION)
+            .tripDate(UPDATED_TRIP_DATE)
             .tripLength(UPDATED_TRIP_LENGTH)
             .tripDescription(UPDATED_TRIP_DESCRIPTION)
             .tripPhoto(UPDATED_TRIP_PHOTO)
             .tripPhotoContentType(UPDATED_TRIP_PHOTO_CONTENT_TYPE)
-            .adventure(UPDATED_ADVENTURE);
+            .adventure(UPDATED_ADVENTURE)
+            .season(UPDATED_SEASON);
 
         restEntryMockMvc
             .perform(
@@ -232,12 +273,13 @@ class EntryResourceIT {
         assertThat(entryList).hasSize(databaseSizeBeforeUpdate);
         Entry testEntry = entryList.get(entryList.size() - 1);
         assertThat(testEntry.getTripTitle()).isEqualTo(UPDATED_TRIP_TITLE);
-        assertThat(testEntry.getTripLocation()).isEqualTo(UPDATED_TRIP_LOCATION);
+        assertThat(testEntry.getTripDate()).isEqualTo(UPDATED_TRIP_DATE);
         assertThat(testEntry.getTripLength()).isEqualTo(UPDATED_TRIP_LENGTH);
         assertThat(testEntry.getTripDescription()).isEqualTo(UPDATED_TRIP_DESCRIPTION);
         assertThat(testEntry.getTripPhoto()).isEqualTo(UPDATED_TRIP_PHOTO);
         assertThat(testEntry.getTripPhotoContentType()).isEqualTo(UPDATED_TRIP_PHOTO_CONTENT_TYPE);
         assertThat(testEntry.getAdventure()).isEqualTo(UPDATED_ADVENTURE);
+        assertThat(testEntry.getSeason()).isEqualTo(UPDATED_SEASON);
     }
 
     @Test
@@ -308,7 +350,7 @@ class EntryResourceIT {
         Entry partialUpdatedEntry = new Entry();
         partialUpdatedEntry.setId(entry.getId());
 
-        partialUpdatedEntry.tripTitle(UPDATED_TRIP_TITLE).tripDescription(UPDATED_TRIP_DESCRIPTION);
+        partialUpdatedEntry.tripTitle(UPDATED_TRIP_TITLE).tripDescription(UPDATED_TRIP_DESCRIPTION).season(UPDATED_SEASON);
 
         restEntryMockMvc
             .perform(
@@ -323,12 +365,13 @@ class EntryResourceIT {
         assertThat(entryList).hasSize(databaseSizeBeforeUpdate);
         Entry testEntry = entryList.get(entryList.size() - 1);
         assertThat(testEntry.getTripTitle()).isEqualTo(UPDATED_TRIP_TITLE);
-        assertThat(testEntry.getTripLocation()).isEqualTo(DEFAULT_TRIP_LOCATION);
+        assertThat(testEntry.getTripDate()).isEqualTo(DEFAULT_TRIP_DATE);
         assertThat(testEntry.getTripLength()).isEqualTo(DEFAULT_TRIP_LENGTH);
         assertThat(testEntry.getTripDescription()).isEqualTo(UPDATED_TRIP_DESCRIPTION);
         assertThat(testEntry.getTripPhoto()).isEqualTo(DEFAULT_TRIP_PHOTO);
         assertThat(testEntry.getTripPhotoContentType()).isEqualTo(DEFAULT_TRIP_PHOTO_CONTENT_TYPE);
         assertThat(testEntry.getAdventure()).isEqualTo(DEFAULT_ADVENTURE);
+        assertThat(testEntry.getSeason()).isEqualTo(UPDATED_SEASON);
     }
 
     @Test
@@ -345,12 +388,13 @@ class EntryResourceIT {
 
         partialUpdatedEntry
             .tripTitle(UPDATED_TRIP_TITLE)
-            .tripLocation(UPDATED_TRIP_LOCATION)
+            .tripDate(UPDATED_TRIP_DATE)
             .tripLength(UPDATED_TRIP_LENGTH)
             .tripDescription(UPDATED_TRIP_DESCRIPTION)
             .tripPhoto(UPDATED_TRIP_PHOTO)
             .tripPhotoContentType(UPDATED_TRIP_PHOTO_CONTENT_TYPE)
-            .adventure(UPDATED_ADVENTURE);
+            .adventure(UPDATED_ADVENTURE)
+            .season(UPDATED_SEASON);
 
         restEntryMockMvc
             .perform(
@@ -365,12 +409,13 @@ class EntryResourceIT {
         assertThat(entryList).hasSize(databaseSizeBeforeUpdate);
         Entry testEntry = entryList.get(entryList.size() - 1);
         assertThat(testEntry.getTripTitle()).isEqualTo(UPDATED_TRIP_TITLE);
-        assertThat(testEntry.getTripLocation()).isEqualTo(UPDATED_TRIP_LOCATION);
+        assertThat(testEntry.getTripDate()).isEqualTo(UPDATED_TRIP_DATE);
         assertThat(testEntry.getTripLength()).isEqualTo(UPDATED_TRIP_LENGTH);
         assertThat(testEntry.getTripDescription()).isEqualTo(UPDATED_TRIP_DESCRIPTION);
         assertThat(testEntry.getTripPhoto()).isEqualTo(UPDATED_TRIP_PHOTO);
         assertThat(testEntry.getTripPhotoContentType()).isEqualTo(UPDATED_TRIP_PHOTO_CONTENT_TYPE);
         assertThat(testEntry.getAdventure()).isEqualTo(UPDATED_ADVENTURE);
+        assertThat(testEntry.getSeason()).isEqualTo(UPDATED_SEASON);
     }
 
     @Test
