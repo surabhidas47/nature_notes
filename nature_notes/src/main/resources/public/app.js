@@ -86,7 +86,7 @@ function showTicketList(data) {
         //5. i am creating nodes! (part of the dom tree)
         let li = document.createElement('li');
         let title = document.createElement('h3');
-
+        let date = document.createElement('p');
         let body = document.createElement('p');
         //let img = document.createElement('img');
 
@@ -94,10 +94,12 @@ function showTicketList(data) {
         title.innerHTML = `<a href="/ticketdetail.html?ticketid=${post.id}">${post.tripTitle}</a>`;
 
         body.innerHTML = `${post.tripDescription}`;
+        date.innerHTML = `${post.tripDate}`
 
         //img.src = `data:image/png;base64,${post.tripPhoto}`;
 
         li.appendChild(title);
+        li.appendChild(date);
         li.appendChild(body);
         //li.appendChild(img);
 
@@ -121,11 +123,13 @@ function showTicketDetail(post) {
     let li = document.createElement('div');
     let title = document.createElement('h2');
     let body = document.createElement('p');
+    let date = document.createElement('p');
     let by = document.createElement('p');
 
     let img = document.createElement('img');
     title.innerHTML = `${post.tripTitle}`;
     body.innerHTML = `${post.tripDescription}`;
+    date.innerHTML = `${post.tripDate}`
 
 
 
@@ -136,6 +140,7 @@ function showTicketDetail(post) {
 
 
     li.appendChild(title);
+    li.appendChild(date);
     li.appendChild(body);
     li.appendChild(img);
     li.appendChild(by);

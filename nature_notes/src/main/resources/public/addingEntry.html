@@ -4,7 +4,7 @@
     <meta charset='UTF-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Add Damage</title>
+    <title>Add Entry</title>
     <link rel="stylesheet" href="./koley.css?v=1">
     <script src="addingEntry.js" async defer></script>
 </head>
@@ -14,23 +14,39 @@
 
 
     <section id="section">
-        <form id="add-dmg-form">
-            <label for="dmgValue">Damage Value:</label><br>
-            <input type="text" id="dmgValue" name="dmgValue" required><br>
+        <form id="Entry Form">
+            <label for="entryValue">Trip Title:</label><br>
+            <input type="text" id="entryValue" name="entryValue" required><br>
 
-            <label for="dmgElement">Element:</label><br>
-            <select id="dmgElement" name="dmgElement">
-                <option>FIRE</option>
-                <option>ICE</option>
-                <option>WATER</option>
-                <option>EARTH</option>
-                <option>ELECTRIC</option>
-                <option>PLANT</option>
-                <option>WIND</option>
-                <option>PHYSICAL</option>
-            </select>
+<!--          <label for="tripLength">Trip Length:</label><br>-->
+<!--          <input type="text" id="tripLength" name="tripLength" required><br>-->
 
-            <input type="button" onclick="doPostOfForm()" value="Add Damage"/>
+<!--            <label for="tripDate">Enter Date:</label><br>-->
+<!--            <select id="tripDate" name="tripDate">-->
+<!--                <option>January</option>-->
+<!--                <option>February</option>-->
+<!--                <option>March</option>-->
+<!--                <option>April</option>-->
+<!--                <option>May</option>-->
+<!--                <option>June</option>-->
+<!--                <option>July</option>-->
+<!--                <option>August</option>-->
+<!--                <option>September</option>-->
+<!--                <option>October</option>-->
+<!--                <option>November</option>-->
+<!--                <option>December</option>-->
+<!--            </select>-->
+            <label for="tripDate">Enter Date:</label><br>
+            <input type="date" id="tripDate" name="tripDate" required><br>
+
+
+          <label for="tripLength">Trip Length:</label><br>
+          <input type="text" id="tripLength" name="tripLength" required><br>
+
+
+
+
+            <input type="button" onclick="doPostOfForm()" value="Submit"/>
         </form>
     </section>
 </body>

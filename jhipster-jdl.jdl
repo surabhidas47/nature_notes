@@ -5,17 +5,22 @@
 entity Entry {
 	
 	tripTitle String,
-	tripLocation String,
+    tripDate LocalDate
     tripLength Integer,
     tripDescription TextBlob,
     tripPhoto ImageBlob,
-    adventure Adventure
+    adventure Adventure,
+    season Season
     
 }
 
 enum Adventure {
 CAMPING, HIKING
 
+}
+
+enum Season {
+SUMMER, FALL, SPRING, WINTER
 }
 
 
@@ -30,8 +35,8 @@ entity Location {
 }
 
 
-relationship OneToMany {
-	 Location{tripLocation} to Entry
+relationship ManyToOne {
+	 Entry{location(locationName)} to Location  
 }
 
 
