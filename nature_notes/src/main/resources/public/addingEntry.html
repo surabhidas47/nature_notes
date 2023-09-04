@@ -5,48 +5,61 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <title>Add Entry</title>
-    <link rel="stylesheet" href="./koley.css?v=1">
+    <!-- <link rel="stylesheet" href="./koley.css?v=1"> -->
     <script src="addingEntry.js" async defer></script>
+
+    <style>
+      .maintitle{
+        font-family: "Bradley Hand";
+        text-align: center;
+        color: #e0e8e3;
+        background-color: #83b299;
+        padding: 20px;
+
+      }
+    </style>
 </head>
 
-<body>
+<body style = "background-color: darkgray">
     <h1 class="maintitle">Create an Entry</h1>
 
 
     <section id="section">
         <form id="Entry Form">
             <label for="entryValue">Trip Title:</label><br>
-            <input type="text" id="entryValue" name="entryValue" required><br>
+            <input type="text" id="entryValue" name="entryValue" required><br><br>
 
-<!--          <label for="tripLength">Trip Length:</label><br>-->
-<!--          <input type="text" id="tripLength" name="tripLength" required><br>-->
 
-<!--            <label for="tripDate">Enter Date:</label><br>-->
-<!--            <select id="tripDate" name="tripDate">-->
-<!--                <option>January</option>-->
-<!--                <option>February</option>-->
-<!--                <option>March</option>-->
-<!--                <option>April</option>-->
-<!--                <option>May</option>-->
-<!--                <option>June</option>-->
-<!--                <option>July</option>-->
-<!--                <option>August</option>-->
-<!--                <option>September</option>-->
-<!--                <option>October</option>-->
-<!--                <option>November</option>-->
-<!--                <option>December</option>-->
-<!--            </select>-->
             <label for="tripDate">Enter Date:</label><br>
-            <input type="date" id="tripDate" name="tripDate" required><br>
+            <input type="date" id="tripDate" name="tripDate" required><br><br>
 
 
-          <label for="tripLength">Trip Length:</label><br>
-          <input type="text" id="tripLength" name="tripLength" required><br>
+            <label for="tripLength">Trip Length:</label><br>
+            <input type="text" id="tripLength" name="tripLength" required><br><br>
+
+            <label for="tripDescription">Trip Description:</label><br>
+            <textarea id="tripDescription" name="tripDescription" rows ="4" cols ="50" required></textarea><br><br>
+
+            <label for="tripPhoto">Trip Photo:</label><br>
+            <input type="file" id="tripPhoto" name="tripPhoto" required><br><br>
+
+            <label for="Adventure">Select a Trip Type:</label>
+            <select id="Adventure" name="Adventure">
+              <option value="CAMPING">CAMPING</option>
+              <option value="HIKING">HIKING</option>
+            </select><br><br>
+
+          <label for="Season">Select a Season:</label>
+          <select id="Season" name="Season">
+            <option value="SUMMER">SUMMER</option>
+            <option value="FALL">FALL</option>
+            <option value="WINTER">WINTER</option>
+            <option value="SPRING">FALL</option>
+          </select><br><br>
 
 
 
-
-            <input type="button" onclick="doPostOfForm()" value="Submit"/>
+          <input type="button" onclick="doPostOfForm()" value="Submit"/>
         </form>
     </section>
 </body>
